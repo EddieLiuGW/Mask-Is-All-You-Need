@@ -1,0 +1,5 @@
+C:\Users\10355\Desktop\Picnic-master\VisualStudio\x64\Debug\example\example.exe
+C:\Users\10355\Desktop\new\Picnic-master\Picnic-master\VisualStudio\x64\Debug\example\example.exe
+C:\Users\10355\Desktop\2024\Project\0 Mask is All You Need\Software\new\Picnic-master-parallel\VisualStudio\x64\Debug\example\example.exe
+C:\Users\10355\Desktop\2024\Project\0 Mask is All You Need\Software\new\Picnic-master-parallel4\VisualStudio\x64\Debug\example\example.exe
+C:\Users\lgw\Desktop\Software\VisualStudio\x64\Debug\example\example.exe

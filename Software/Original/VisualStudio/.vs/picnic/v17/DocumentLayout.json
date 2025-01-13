@@ -1,0 +1,68 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\lgw\\Desktop\\Software\\Original\\VisualStudio\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CE0F4C42-FD63-4B44-A722-A4772D1988E9}|libpicnic.vcxproj|C:\\Users\\lgw\\Desktop\\Software\\Original\\picnic3_impl.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CE0F4C42-FD63-4B44-A722-A4772D1988E9}|libpicnic.vcxproj|C:\\Users\\lgw\\Desktop\\Software\\Original\\picnic.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CEFCB122-C4EA-43AC-8D97-E090910C4115}|example.vcxproj|C:\\Users\\lgw\\Desktop\\Software\\Original\\example.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "example.c",
+              "DocumentMoniker": "C:\\Users\\lgw\\Desktop\\Software\\Original\\example.c",
+              "RelativeDocumentMoniker": "..\\example.c",
+              "ToolTip": "C:\\Users\\lgw\\Desktop\\Software\\Original\\example.c",
+              "RelativeToolTip": "..\\example.c",
+              "ViewState": "AgIAAIEAAAAAAAAAAADgv4sAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-10-24T08:29:36.825Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "picnic.c",
+              "DocumentMoniker": "C:\\Users\\lgw\\Desktop\\Software\\Original\\picnic.c",
+              "RelativeDocumentMoniker": "..\\picnic.c",
+              "ToolTip": "C:\\Users\\lgw\\Desktop\\Software\\Original\\picnic.c",
+              "RelativeToolTip": "..\\picnic.c",
+              "ViewState": "AgIAAEYBAAAAAAAAAADgv1ABAABpAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-10-23T08:03:15.44Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "picnic3_impl.c",
+              "DocumentMoniker": "C:\\Users\\lgw\\Desktop\\Software\\Original\\picnic3_impl.c",
+              "RelativeDocumentMoniker": "..\\picnic3_impl.c",
+              "ToolTip": "C:\\Users\\lgw\\Desktop\\Software\\Original\\picnic3_impl.c",
+              "RelativeToolTip": "..\\picnic3_impl.c",
+              "ViewState": "AgIAAFcBAAAAAAAAAADgv2cBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2024-10-23T07:33:45.908Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

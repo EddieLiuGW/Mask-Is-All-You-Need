@@ -1,0 +1,127 @@
+﻿  hash.c
+  lowmc_constants.c
+  picnic.c
+  picnic3_impl.c
+  picnic_impl.c
+  picnic_types.c
+  KeccakHash.c
+  KeccakP-1600-reference.c
+  KeccakSpongeWidth1600.c
+  tree.c
+C:\Users\lgw\Desktop\Software\picnic.c(241,26): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic.c(247,39): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic.c(259,31): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic.c(265,44): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic.c(273,45): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic.c(379,60): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\tree.c(49,29): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\tree.c(50,55): warning C4334: “<<”: 32 位移位的结果被隐式转换为 64 位(是否希望进行 64 位移位?)
+C:\Users\lgw\Desktop\Software\tree.c(67,33): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\tree.c(220,16): warning C4477: “printf”: 格式字符串“%lu”需要类型“unsigned long”的参数，但可变参数 1 拥有了类型“size_t”
+      C:\Users\lgw\Desktop\Software\tree.c(220,16):
+      请考虑在格式字符串中使用“%zu”
+  
+C:\Users\lgw\Desktop\Software\tree.c(434,23): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\tree.c(526,23): warning C4267: “-=”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(100,31): warning C4267: “函数”: 从“size_t”转换到“uint16_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(101,31): warning C4267: “函数”: 从“size_t”转换到“uint16_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(124,31): warning C4267: “函数”: 从“size_t”转换到“uint16_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(125,31): warning C4267: “函数”: 从“size_t”转换到“uint16_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(144,35): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(156,35): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(169,35): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(170,16): warning C4477: “printf”: 格式字符串“%zu”需要类型“unsigned __int64”的参数，但可变参数 1 拥有了类型“int”
+      C:\Users\lgw\Desktop\Software\picnic3_impl.c(170,16):
+      请考虑在格式字符串中使用“%u”
+      C:\Users\lgw\Desktop\Software\picnic3_impl.c(170,16):
+      请考虑在格式字符串中使用“%I32u”
+  
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(192,61): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(206,35): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(206,38): warning C4244: “函数”: 从“uint16_t”转换到“uint8_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(212,35): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(212,79): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(212,38): warning C4244: “函数”: 从“uint16_t”转换到“uint8_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(239,44): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(240,35): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(248,44): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(258,44): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(259,40): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(267,49): warning C4047: “函数”:“uint32_t”与“uint32_t *”的间接级别不同
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(267,49): warning C4024: “tapesToWordOMP”: 形参和实参 2 的类型不同
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(273,39): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(291,39): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(300,47): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(301,47): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(302,45): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(304,48): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(305,48): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(306,46): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(323,28): warning C4267: “+=”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(326,50): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(331,50): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(334,48): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(337,55): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(338,55): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(339,53): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(344,136): warning C4267: “函数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(345,138): warning C4267: “函数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(346,138): warning C4267: “函数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(329,28): warning C4244: “初始化”: 从“uint16_t”转换到“uint8_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(333,28): warning C4244: “初始化”: 从“uint16_t”转换到“uint8_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(336,28): warning C4244: “初始化”: 从“uint16_t”转换到“uint8_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(356,28): warning C4267: “+=”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(359,50): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(364,50): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(368,48): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(373,55): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(374,55): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(375,53): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(383,136): warning C4267: “函数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(384,138): warning C4267: “函数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(385,138): warning C4267: “函数”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(362,28): warning C4244: “初始化”: 从“uint16_t”转换到“uint8_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(366,28): warning C4244: “初始化”: 从“uint16_t”转换到“uint8_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(370,28): warning C4244: “初始化”: 从“uint16_t”转换到“uint8_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(398,75): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(411,50): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(414,50): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(417,48): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(429,36): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(430,36): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(431,34): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(493,28): warning C4101: “msgspos_flag”: 未引用的局部变量
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(493,14): warning C4101: “tapepos_flag”: 未引用的局部变量
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(643,75): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(643,147): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(644,75): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(644,147): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(645,75): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(645,147): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(646,75): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(646,147): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(546,14): warning C4101: “roundKey_s”: 未引用的局部变量
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(555,14): warning C4101: “tapes_pos”: 未引用的局部变量
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(552,28): warning C4101: “msgspos_flag”: 未引用的局部变量
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(548,14): warning C4101: “y_s”: 未引用的局部变量
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(554,14): warning C4101: “msgs_pos”: 未引用的局部变量
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(552,14): warning C4101: “tapepos_flag”: 未引用的局部变量
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(564,13): warning C4101: “r”: 未引用的局部变量
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(665,27): warning C4267: “函数”: 从“size_t”转换到“uint16_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(666,27): warning C4267: “函数”: 从“size_t”转换到“uint16_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(691,41): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(742,20): warning C4267: “return”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(757,31): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(757,75): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(770,53): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(770,75): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(824,57): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(959,34): warning C4267: “=”: 从“size_t”转换到“uint16_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic3_impl.c(1066,32): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic_impl.c(76,34): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic_impl.c(78,22): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic_impl.c(189,87): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic_impl.c(725,73): warning C4267: “函数”: 从“size_t”转换到“uint16_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic_impl.c(1146,34): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+C:\Users\lgw\Desktop\Software\picnic_impl.c(1148,38): warning C4267: “函数”: 从“size_t”转换到“uint32_t”，可能丢失数据
+  libpicnic.vcxproj -> C:\Users\lgw\Desktop\Software\VisualStudio\x64\Debug\libpicnic\libpicnic.lib
