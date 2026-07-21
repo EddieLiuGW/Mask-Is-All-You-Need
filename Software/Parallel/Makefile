@@ -1,12 +1,13 @@
 
 CC=gcc
-WARNING_FLAGS=-Wall -Wextra -Wpedantic -Werror -Wshadow
-CFLAGS= -O2 -march=native $(WARNING_FLAGS) -std=gnu99 -D__LINUX__ -D__X64__ -I./sha3
-CFLAGS_DEBUG= -g -march=native $(WARNING_FLAGS) -std=gnu99 -D__LINUX__ -D__X64__ -I./sha3
+WARNING_FLAGS=-Wall -Wextra -Wpedantic -Wshadow
+OPENMP_FLAGS=-fopenmp
+CFLAGS= -O2 -march=native $(WARNING_FLAGS) $(OPENMP_FLAGS) -std=gnu99 -D__LINUX__ -D__X64__ -I./sha3
+CFLAGS_DEBUG= -g -march=native $(WARNING_FLAGS) $(OPENMP_FLAGS) -std=gnu99 -D__LINUX__ -D__X64__ -I./sha3
 NISTKATFLAGS = -Wno-sign-compare -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-result
 SHA3LIB=libshake.a
 SHA3_PATH=sha3
-LDFLAGS= $(SHA3_PATH)/$(SHA3LIB) 
+LDFLAGS= $(SHA3_PATH)/$(SHA3LIB) $(OPENMP_FLAGS)
 
 SOURCES= picnic_impl.c picnic3_impl.c picnic.c lowmc_constants.c
 PICNIC_OBJECTS= picnic_impl.o picnic3_impl.o picnic.o lowmc_constants.o hash.o picnic_types.o tree.o
@@ -16,6 +17,7 @@ EXECUTABLE_TESTVECTORS=create_test_vectors
 EXECUTABLE_UNITTEST=unit_test
 EXECUTABLE_KATSTEST=kats_test
 EXECUTABLE_TREETEST=tree_test
+EXECUTABLE_PARALLEL_RUNTIME_TEST=parallel_runtime_test
 
 all: $(SHA3LIB) $(SOURCES) $(PICNIC_LIB) $(EXECUTABLE_EXAMPLE) $(EXECUTABLE_TESTVECTORS) $(EXECUTABLE_UNITTEST) $(EXECUTABLE_KATSTEST)  $(EXECUTABLE_TREETEST) 
 
@@ -41,6 +43,12 @@ $(EXECUTABLE_TESTVECTORS): $(EXECUTABLE_TESTVECTORS).c $(PICNIC_LIB)
 $(EXECUTABLE_KATSTEST): $(EXECUTABLE_KATSTEST).c $(PICNIC_LIB)
 	    $(CC) $(@).c $(CFLAGS) $(PICNIC_LIB) -o $@ $(LDFLAGS)
 
+$(EXECUTABLE_PARALLEL_RUNTIME_TEST): tests/parallel_runtime_test.c $(PICNIC_LIB) $(SHA3LIB)
+	    $(CC) $< $(CFLAGS) -I. $(PICNIC_LIB) -o $@ $(LDFLAGS)
+
+check-parallel-runtime: $(EXECUTABLE_PARALLEL_RUNTIME_TEST)
+	    bash tests/check_parallel_runtime.sh ./$(EXECUTABLE_PARALLEL_RUNTIME_TEST)
+
 .c.o: 
 	    $(CC) -c $(CFLAGS) $< -o $@
 
@@ -56,6 +64,8 @@ clean:
 	    rm $(EXECUTABLE_TREETEST) 2>/dev/null || true
 	    rm $(EXECUTABLE_KATSTEST) 2>/dev/null || true
 	    rm $(EXECUTABLE_TESTVECTORS) 2>/dev/null || true
+	    rm $(EXECUTABLE_PARALLEL_RUNTIME_TEST) 2>/dev/null || true
 		rm $(PICNIC_LIB) 2>/dev/null || true
 		$(MAKE) -C $(SHA3_PATH) clean
 
+.PHONY: all debug clean check-parallel-runtime

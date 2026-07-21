@@ -29,6 +29,13 @@
 #define MIN(a,b)            (((a) < (b)) ? (a) : (b))
 
 #define MAX_AUX_BYTES ((LOWMC_MAX_AND_GATES + LOWMC_MAX_KEY_BITS) / 8 + 1)
+#define PICNIC3_LOWMC_ROUNDS 4
+#define PICNIC3_MPC_PARTIES 16
+
+typedef struct hybrid_round_output_t {
+    uint8_t aux[LOWMC_MAX_STATE_SIZE];
+    uint8_t msgs[PICNIC3_MPC_PARTIES][LOWMC_MAX_STATE_SIZE];
+} hybrid_round_output_t;
 
 
 static int32_t nlz(uint32_t x)
@@ -84,38 +91,9 @@ static void createRandomTapes(randomTape_t* tapes, uint8_t** seeds, uint8_t* sal
 
 }
 
-static void createRandomTapes_para(randomTape_t* tapes, randomTape_t* tapes0, randomTape_t* tapes1, randomTape_t* tapes2, randomTape_t* tapes3, uint8_t** seeds, uint8_t* salt, size_t t, paramset_t* params)
-{
-    HashInstance ctx;
-
-    size_t tapeSizeBytes = getTapeSizeBytes(params);
-
-    allocateRandomTape(tapes, params);
-    allocateRandomTape(tapes0, params);
-    allocateRandomTape(tapes1, params);
-    allocateRandomTape(tapes2, params);
-    allocateRandomTape(tapes3, params);
-    for (size_t i = 0; i < params->numMPCParties; i++) {
-        HashInit(&ctx, params, HASH_PREFIX_NONE);
-        HashUpdate(&ctx, seeds[i], params->seedSizeBytes);
-        HashUpdate(&ctx, salt, params->saltSizeBytes);
-        HashUpdateIntLE(&ctx, t);
-        HashUpdateIntLE(&ctx, i);
-        HashFinal(&ctx);
-
-        HashSqueeze(&ctx, tapes->tape[i], tapeSizeBytes);
-
-        memcpy(tapes3->tape[i], tapes->tape[i], params->stateSizeBits * params->numRounds * 2 / 8);
-        memcpy(tapes2->tape[i], tapes->tape[i], params->stateSizeBits * params->numRounds * 2 / 8);
-        memcpy(tapes1->tape[i], tapes->tape[i], params->stateSizeBits * params->numRounds * 2 / 8);
-        memcpy(tapes0->tape[i], tapes->tape[i], params->stateSizeBits * params->numRounds * 2 / 8);
-    }
-
-}
-
 static uint16_t tapesToWord(randomTape_t* tapes)
 {
-    uint16_t shares;
+    uint16_t shares = 0;
 
     for (size_t i = 0; i < 16; i++) {
         uint8_t bit = getBit(tapes->tape[i], tapes->pos);
@@ -125,9 +103,9 @@ static uint16_t tapesToWord(randomTape_t* tapes)
     return shares;
 }
 
-static uint16_t tapesToWordOMP(randomTape_t* tapes, uint32_t tapes_pos)
+static uint16_t tapesToWordOMP(const randomTape_t* tapes, uint32_t tapes_pos)
 {
-    uint16_t shares;
+    uint16_t shares = 0;
 
     for (size_t i = 0; i < 16; i++) {
         uint8_t bit = getBit(tapes->tape[i], tapes_pos);
@@ -144,10 +122,10 @@ static void tapesToWords(shares_t* shares, randomTape_t* tapes)
         shares->shares[w] = tapesToWord(tapes);
     }
 }
-static void tapesToWordsOMP(shares_t* shares, randomTape_t* tapes, uint32_t tapes_pos)
+static void tapesToWordsOMP(uint16_t* shares, size_t numWords, const randomTape_t* tapes, uint32_t tapes_pos)
 {
-    for (size_t w = 0; w < shares->numWords; w++) {
-        shares->shares[w] = tapesToWordOMP(tapes, tapes_pos + w);
+    for (size_t w = 0; w < numWords; w++) {
+        shares[w] = tapesToWordOMP(tapes, tapes_pos + (uint32_t)w);
     }
 }
 static void tapesToParityBits(uint32_t* output, size_t outputBitLen, randomTape_t* tapes)
@@ -156,7 +134,7 @@ static void tapesToParityBits(uint32_t* output, size_t outputBitLen, randomTape_
         setBitInWordArray(output, i, parity16(tapesToWord(tapes)));
     }
 }
-static void tapesToParityBitsOMP(uint32_t* output, size_t outputBitLen, randomTape_t* tapes, uint32_t tapes_pos)
+static void tapesToParityBitsOMP(uint32_t* output, size_t outputBitLen, const randomTape_t* tapes, uint32_t tapes_pos)
 {
     for (size_t i = 0; i < outputBitLen; i++) {
         setBitInWordArray(output, i, parity16(tapesToWordOMP(tapes, tapes_pos + i)));
@@ -186,33 +164,36 @@ static void wordToMsgs(uint16_t w, msgs_t* msgs, paramset_t* params)
     msgs->pos++;
 }
 
-static void wordToMsgsOMPOpt(uint16_t w, msgs_t* msgs, uint32_t msgs_pos, paramset_t* params)
+static void wordToRoundMsgs(uint16_t w, hybrid_round_output_t* output, uint32_t gate, const paramset_t* params)
 {
     for (size_t i = 0; i < params->numMPCParties; i++) {
         uint8_t w_i = getBit((uint8_t*)&w, i);
-        setBit(msgs->msgs[i], msgs_pos, w_i);
+        setBit(output->msgs[i], gate, w_i);
     }
 }
 
-static void hybrid_mpc_ANDOpt(uint8_t a, uint8_t b, uint8_t lambda_a, uint8_t lambda_b, uint16_t mask_a, uint16_t mask_b, uint8_t fresh_output_mask, randomTape_t* tapes, msgs_t* msgs, uint32_t tapes_pos, uint32_t msgs_pos, paramset_t* params, int r, int i)
+static void hybrid_mpc_ANDOpt(uint8_t a, uint8_t b, uint8_t lambda_a, uint8_t lambda_b,
+    uint16_t mask_a, uint16_t mask_b, uint8_t fresh_output_mask,
+    const randomTape_t* tapes, const msgs_t* msgs, hybrid_round_output_t* output,
+    uint32_t tapes_pos, uint32_t msgs_pos, const paramset_t* params, uint32_t gate)
 {
     size_t lastParty = params->numMPCParties - 1;
-    uint16_t and_helper = tapesToWordOMP(tapes, tapes_pos + i);
+    uint16_t and_helper = tapesToWordOMP(tapes, tapes_pos + gate);
 
     uint16_t tmp_and_helper = and_helper;
 
-    and_helper = parity16(and_helper) ^ getBit(tapes->tape[lastParty], tapes_pos + i);
+    and_helper = parity16(and_helper) ^ getBit(tapes->tape[lastParty], tapes_pos + gate);
 
     uint8_t aux_bit = (lambda_a & lambda_b) ^ and_helper ^ fresh_output_mask;
-    setBit(tapes->tape[lastParty], tapes_pos + i, aux_bit);
+    setBit(output->aux, gate, aux_bit);
 
     setBit((uint8_t*)&tmp_and_helper, lastParty, aux_bit);
     uint16_t s_shares = (extend(a ^ lambda_a) & mask_b) ^ (extend(b ^ lambda_b) & mask_a) ^ tmp_and_helper;
     if (msgs->unopened >= 0) {
-        uint8_t unopenedPartyBit = getBit(msgs->msgs[msgs->unopened], msgs_pos + i);
+        uint8_t unopenedPartyBit = getBit(msgs->msgs[msgs->unopened], msgs_pos + gate);
         setBit((uint8_t*)&s_shares, msgs->unopened, unopenedPartyBit);
     }
-    wordToMsgsOMPOpt(s_shares, msgs, msgs_pos+ i, params);
+    wordToRoundMsgs(s_shares, output, gate, params);
 }
 
 static void aux_mpc_sbox(const uint32_t* in, const uint32_t* out, randomTape_t* tapes, paramset_t* params)
@@ -236,24 +217,26 @@ static void aux_mpc_sbox(const uint32_t* in, const uint32_t* out, randomTape_t* 
     }
 }
 
-static void hybrid_mpc_sbox_s(const uint32_t* in, const uint32_t* out, randomTape_t* tapes, msgs_t* msgs, uint32_t* state, uint32_t tapes_pos, uint32_t msgs_pos, paramset_t* params, int r)
+static void hybrid_mpc_sbox_s(const uint32_t* out, const randomTape_t* tapes, const msgs_t* msgs,
+    const uint32_t* state, hybrid_round_output_t* output, uint32_t tapes_pos,
+    uint32_t msgs_pos, const paramset_t* params)
 {
-    shares_t* tmp_shares = allocateShares(params->stateSizeBits);
-    tapesToWordsOMP(tmp_shares, tapes, tapes_pos);
-    tapes_pos += tmp_shares->numWords;
+    uint16_t tmp_shares[LOWMC_MAX_KEY_BITS];
+    tapesToWordsOMP(tmp_shares, params->stateSizeBits, tapes, tapes_pos);
+    tapes_pos += params->stateSizeBits;
 
     for (size_t i = 0; i < params->numSboxes * 3; i += 3) {
         uint8_t a = getBitFromWordArray(state, i + 2);
 
-        uint16_t mask_a = tmp_shares->shares[i + 2];
+        uint16_t mask_a = tmp_shares[i + 2];
         uint8_t lambda_a = parity16(mask_a);
 
         uint8_t b = getBitFromWordArray(state, i + 1);
-        uint16_t mask_b = tmp_shares->shares[i + 1];
+        uint16_t mask_b = tmp_shares[i + 1];
         uint8_t lambda_b = parity16(mask_b);
 
         uint8_t c = getBitFromWordArray(state, i);
-        uint16_t mask_c = tmp_shares->shares[i];
+        uint16_t mask_c = tmp_shares[i];
         uint8_t lambda_c = parity16(mask_c);
 
 
@@ -267,13 +250,14 @@ static void hybrid_mpc_sbox_s(const uint32_t* in, const uint32_t* out, randomTap
         uint8_t fresh_output_mask_ca = lambda_e ^ lambda_a ^ lambda_b;
 
 
-        hybrid_mpc_ANDOpt(a, b, lambda_a, lambda_b, mask_a, mask_b, fresh_output_mask_ab, tapes, msgs, tapes_pos, msgs_pos, params, r, i);
-        hybrid_mpc_ANDOpt(b, c, lambda_b, lambda_c, mask_b, mask_c, fresh_output_mask_bc, tapes, msgs, tapes_pos, msgs_pos, params, r, i + 1);
-        hybrid_mpc_ANDOpt(c, a, lambda_c, lambda_a, mask_c, mask_a, fresh_output_mask_ca, tapes, msgs, tapes_pos, msgs_pos, params, r, i + 2);
+        hybrid_mpc_ANDOpt(a, b, lambda_a, lambda_b, mask_a, mask_b, fresh_output_mask_ab,
+            tapes, msgs, output, tapes_pos, msgs_pos, params, (uint32_t)i);
+        hybrid_mpc_ANDOpt(b, c, lambda_b, lambda_c, mask_b, mask_c, fresh_output_mask_bc,
+            tapes, msgs, output, tapes_pos, msgs_pos, params, (uint32_t)i + 1);
+        hybrid_mpc_ANDOpt(c, a, lambda_c, lambda_a, mask_c, mask_a, fresh_output_mask_ca,
+            tapes, msgs, output, tapes_pos, msgs_pos, params, (uint32_t)i + 2);
 
     }
-
-    freeShares(tmp_shares);
 }
 
 static uint8_t mpc_AND(uint8_t a, uint8_t b, uint16_t mask_a, uint16_t mask_b, randomTape_t* tapes, msgs_t* msgs, paramset_t* params)
@@ -367,20 +351,52 @@ static void computeAuxTape(randomTape_t* tapes, uint8_t* inputs, paramset_t* par
 
 }
 
+static void copyBits(uint8_t* destination, uint32_t destinationPos,
+    const uint8_t* source, uint32_t bitCount)
+{
+    for (uint32_t i = 0; i < bitCount; i++) {
+        setBit(destination, destinationPos + i, getBit(source, i));
+    }
+}
+
+/* Merge a byte-aligned source into an initially zero destination bit string. */
+static void mergePackedBits(uint8_t* destination, size_t destinationBytes,
+    uint32_t destinationPos, const uint8_t* source, uint32_t bitCount)
+{
+    const size_t sourceBytes = numBytes(bitCount);
+    const size_t destinationByte = destinationPos / 8;
+    const uint32_t shift = destinationPos % 8;
+
+    for (size_t i = 0; i < sourceBytes; i++) {
+        const size_t currentByte = destinationByte + i;
+        assert(currentByte < destinationBytes);
+
+        if (shift == 0) {
+            destination[currentByte] |= source[i];
+        }
+        else {
+            destination[currentByte] |= (uint8_t)(source[i] >> shift);
+            if (currentByte + 1 < destinationBytes) {
+                destination[currentByte + 1] |= (uint8_t)(source[i] << (8 - shift));
+            }
+        }
+    }
+}
+
 // Computing phase
 static void computeHybridPhase(randomTape_t* tapes, uint8_t* inputs, msgs_t* msgs, uint32_t* state, paramset_t* params)
 {
-
-    uint32_t roundKey_s[LOWMC_MAX_WORDS];
-    uint32_t x_s[LOWMC_MAX_WORDS] = { 0 };
-    uint32_t y_s[LOWMC_MAX_WORDS];
     uint32_t key[LOWMC_MAX_WORDS];
-    uint32_t key0[LOWMC_MAX_WORDS];
-    uint32_t msgs_pos[4];
-    uint32_t tapes_pos[4];
-    int32_t r = params->numRounds;
+    uint32_t key0[LOWMC_MAX_WORDS] = { 0 };
+    hybrid_round_output_t roundOutputs[PICNIC3_LOWMC_ROUNDS];
 
-    key0[params->stateSizeWords - 1] = 0;
+    assert(params->numRounds == PICNIC3_LOWMC_ROUNDS);
+    assert(params->numMPCParties == PICNIC3_MPC_PARTIES);
+    assert(params->stateSizeBits <= LOWMC_MAX_KEY_BITS);
+    assert(params->numSboxes * 3 == params->stateSizeBits);
+
+    memset(roundOutputs, 0, sizeof(roundOutputs));
+
     tapesToParityBits(key0, params->stateSizeBits, tapes);
     matrix_mul(key, key0, KMatrixInv(0, params), params);
 
@@ -388,22 +404,47 @@ static void computeHybridPhase(randomTape_t* tapes, uint8_t* inputs, msgs_t* msg
         memcpy(inputs, key, params->stateSizeBytes);
     }
 
-    for (r = params->numRounds; r > 0; r--) {
-        if (r == 4) {
-            ;
-        }
-        else {
-            tapes_pos[r - 1] = params->stateSizeBits * 2 * (r);
-            tapesToParityBitsOMP(x_s, params->stateSizeBits, tapes, tapes_pos[r - 1]);
+    /* After the serial witness-mask prelude, Picnic3's four LowMC rounds are
+     * independent. Keep each round's writes byte-aligned and private: the
+     * canonical L1/L5 bit strings have non-byte-aligned round boundaries. */
+#if defined(_OPENMP)
+    #pragma omp parallel for num_threads(PICNIC3_LOWMC_ROUNDS) schedule(static, 1) \
+        default(none) shared(key, params, state, tapes, msgs, roundOutputs)
+#endif
+    for (int32_t roundIndex = 0; roundIndex < PICNIC3_LOWMC_ROUNDS; roundIndex++) {
+        const uint32_t round = (uint32_t)roundIndex + 1;
+        const uint32_t tapesPos = params->stateSizeBits * 2 * (uint32_t)roundIndex;
+        const uint32_t msgsPos = params->stateSizeBits * (uint32_t)roundIndex;
+        uint32_t roundKey[LOWMC_MAX_WORDS];
+        uint32_t x[LOWMC_MAX_WORDS] = { 0 };
+        uint32_t y[LOWMC_MAX_WORDS];
+
+        if (round != params->numRounds) {
+            const uint32_t inputMaskPos = params->stateSizeBits * 2 * round;
+            tapesToParityBitsOMP(x, params->stateSizeBits, tapes, inputMaskPos);
         }
 
-        matrix_mul(roundKey_s, key, KMatrix(r, params), params);    
-        xor_array(x_s, x_s, roundKey_s, params->stateSizeWords);
-        matrix_mul(y_s, x_s, LMatrixInv(r - 1, params), params);
-        tapes_pos[r - 1] = params->stateSizeBits * 2 * (r - 1);
-        msgs_pos[r - 1] = params->stateSizeBits * (r - 1);
-        hybrid_mpc_sbox_s(x_s, y_s, tapes, msgs, state + ((r - 1) * params->stateSizeWords), tapes_pos[r - 1], msgs_pos[r - 1], params, r);
+        matrix_mul(roundKey, key, KMatrix(round, params), params);
+        xor_array(x, x, roundKey, params->stateSizeWords);
+        matrix_mul(y, x, LMatrixInv(roundIndex, params), params);
+        hybrid_mpc_sbox_s(y, tapes, msgs,
+            state + ((size_t)roundIndex * params->stateSizeWords),
+            &roundOutputs[roundIndex], tapesPos, msgsPos, params);
+    }
 
+    for (size_t party = 0; party < params->numMPCParties; party++) {
+        memset(msgs->msgs[party], 0, params->andSizeBytes);
+    }
+    for (uint32_t roundIndex = 0; roundIndex < params->numRounds; roundIndex++) {
+        const uint32_t tapesPos = params->stateSizeBits * (2 * roundIndex + 1);
+        const uint32_t msgsPos = params->stateSizeBits * roundIndex;
+
+        copyBits(tapes->tape[params->numMPCParties - 1], tapesPos,
+            roundOutputs[roundIndex].aux, params->stateSizeBits);
+        for (size_t party = 0; party < params->numMPCParties; party++) {
+            mergePackedBits(msgs->msgs[party], params->andSizeBytes, msgsPos,
+                roundOutputs[roundIndex].msgs[party], params->stateSizeBits);
+        }
     }
 
     tapes->pos = 0;
@@ -1021,12 +1062,11 @@ int sign_picnic3(uint32_t* privateKey, uint32_t* pubKey, uint32_t* plaintext, co
     printf("--------Self-Test complete-----------------\n");
 #endif
 
-Exit:
-
     for (size_t t = 0; t < params->numMPCRounds; t++) {
         freeRandomTape(&tapes[t]);
         freeTree(seeds[t]);
     }
+    free(seeds);
     free(tapes);
     free(state);
     freeTree(iSeedsTree);

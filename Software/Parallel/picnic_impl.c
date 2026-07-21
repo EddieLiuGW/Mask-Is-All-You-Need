@@ -215,8 +215,10 @@ void LowMCEnc(const uint32_t* plaintext, uint32_t* output, uint32_t* key, params
 
     if (plaintext != output) {
         /* output will hold the intermediate state */
-        memcpy(output, plaintext, params->stateSizeWords*(sizeof(uint32_t)));
+        memcpy(output, plaintext, params->stateSizeBytes);
     }
+    memset((uint8_t*)output + params->stateSizeBytes, 0,
+        params->stateSizeWords * sizeof(uint32_t) - params->stateSizeBytes);
 
     matrix_mul(roundKey, key, KMatrix(0, params), params);
     xor_array(output, output, roundKey, params->stateSizeWords);
@@ -233,11 +235,8 @@ void LowMCEnc(const uint32_t* plaintext, uint32_t* output, uint32_t* key, params
 void LowMCEncState(const uint32_t* plaintext, uint32_t* key, paramset_t* params, uint32_t* output)
 {
     uint32_t roundKey[LOWMC_MAX_WORDS];
-    uint32_t state[LOWMC_MAX_WORDS];
-    if (plaintext != state) {
-        /* output will hold the intermediate state */
-        memcpy(&state, plaintext, params->stateSizeWords * (sizeof(uint32_t)));
-    }
+    uint32_t state[LOWMC_MAX_WORDS] = { 0 };
+    memcpy(state, plaintext, params->stateSizeBytes);
     memset(output, 0, params->numRounds * params->stateSizeWords * (sizeof(uint32_t)));
     //printf("\nLowmc_key = sk: \n");
     //for (size_t i = 0; i < params->stateSizeBits; i++)
@@ -1219,7 +1218,4 @@ int deserializeSignature(signature_t* sig, const uint8_t* sigBytes,
 
     return EXIT_SUCCESS;
 }
-
-
-
 
